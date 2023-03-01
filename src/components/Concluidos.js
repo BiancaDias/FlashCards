@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export default function Concluidos(){
     return(
-        <Rodape>
+        <Rodape data-test="footer">
             <p>0/4 CONCLUÍDOS</p>
         </Rodape>
     )

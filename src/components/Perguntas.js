@@ -76,22 +76,22 @@ function PerguntasIndividuais({question, answer, numero, revelarCard, cardFrontO
     cardBackOculto, perguntaOculta, acertei, quaseAcertei, errei, arrayDeClicados}) {
     return (
        <>
-            <Pergunta perguntaOculta={perguntaOculta} arrayDeClicados={arrayDeClicados}>
-                <p>Pergunta {numero}</p>
-                <button onClick={()=>revelarCard(numero)}><img src={play} alt="Botão de ver pergunta" /></button>
+            <Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} arrayDeClicados={arrayDeClicados}>
+                <p data-test="flashcard-text">Pergunta {numero}</p>
+                <button data-test="play-btn" onClick={()=>revelarCard(numero)}><img src={play} alt="Botão de ver pergunta" /></button>
             </Pergunta>
             <Card>
                 <CardFront  cardFrontOculto={cardFrontOculto}>
-                    <p>{question}</p>
-                    <button onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
+                    <p data-test="flashcard-text">{question}</p>
+                    <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
 
                 </CardFront>
                 <CardBack cardBackOculto={cardBackOculto}>
-                    <p>{answer}</p>
+                    <p data-test="flashcard-text">{answer}</p>
                     <Botoes>
-                        <Errou onClick={errei}>Não lembrei</Errou>
-                        <Quase onClick={quaseAcertei}>Quase não lembrei</Quase>
-                        <Certo onClick={acertei}>Zap!</Certo>
+                        <Errou data-test="no-btn"  onClick={errei}>Não lembrei</Errou>
+                        <Quase data-test="partial-btn"  onClick={quaseAcertei}>Quase não lembrei</Quase>
+                        <Certo data-test="zap-btn"  onClick={acertei}>Zap!</Certo>
                     </Botoes>
                 </CardBack>
             </Card>
