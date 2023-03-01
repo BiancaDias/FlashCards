@@ -1,30 +1,201 @@
 import girar from "../assets/seta_virar.png"
 import play from "../assets/seta_play.png"
+import styled from "styled-components";
+import { useState } from "react";
 
-export default function Perguntas() {
+export default function Perguntas({setErrado, setQuase, setZap, errado ,quase, zap}) {
+    const cards = [
+        { question: "O que é JSX?", answer: "Uma extensão da linguagem JavaScript" },
+        { question: "O React é __", answer: "Uma biblioteca JavaScript para construção de interfaces" },
+        { question: "Componentes devem iniciar com __", answer: "Letra maiúscula" },
+        { question: "Podemos colocar __ dentro do JSX", answer: "expressões" },
+        { question: "O ReactDOM nos ajuda __", answer: "Interagindo com a DOM para colocar componentes React na mesma" },
+        { question: "Usamos o npm para __", answer: "Gerenciar os pacotes necessários e suas dependências" },
+        { question: "Usamos props para __", answer: "Passar diferentes informações para componentes" },
+        { question: "Usamos estado (state) para __", answer: "Dizer para o React quais informações quando atualizadas devem renderizar a tela novamente" }
+    ]
+
+    const [cardFrontOculto, setCardFrontOculto] = useState(true);
+    const [cardBackOculto, setCardBackOculto] = useState(true);
+    const [perguntaOculta, setPerguntaOculta] = useState(false);
+
+    const [arrayDeClicados, setArrayDeClicados] = useState([]);
+
+    function revelarCard(cardClicado){
+        setCardFrontOculto(false);
+        setPerguntaOculta(true);
+        setArrayDeClicados([...arrayDeClicados, cardClicado])
+    }
+
+    function revelaResposta(){
+        setCardFrontOculto(true);
+        setCardBackOculto(false);
+    }
+    function terminaCard(){
+        setPerguntaOculta(false);
+        setCardBackOculto(true);
+    }
+
+    function acertei(){
+        setZap(zap+1);
+        terminaCard()
+    }
+    function quaseAcertei(){
+        setQuase(quase+1)
+        terminaCard()
+    }
+    function errei(){
+        setErrado(errado+1)
+        terminaCard()
+    }
     return (
-        <>
-            <div className="Perguntas">
-                <div className="pergunta">
-                    <p>Pergunta 1</p>
-                    <img src={play} alt="Botão de ver pergunta"/>
-                </div>
-            </div>
-            <div className="card">
-                <div className="card-front">
-                    <p>O que é JSX?</p>
-                    <button><img src={girar} alt="botão de girar o card"></img></button>
 
-                </div>
-                <div className="card-back">
-                    <p>JSX é uma sintaxe para escrever HTML dentro do JS</p>
-                    <div className="botoes">
-                        <button className="errou">Não lembrei</button>
-                        <button className="quase">Quase não lembrei</button>
-                        <button className="certo">Zap!</button>
-                    </div>
-                </div>
-            </div>
+        <PerguntasCards>
+            {cards.map((card, i) => <PerguntasIndividuais 
+            key={i+1} 
+            question={card.question} 
+            answer = {card.answer} 
+            numero={i+1} 
+            revelarCard={revelarCard} 
+            cardFrontOculto={cardFrontOculto}
+            revelaResposta={revelaResposta}
+            cardBackOculto={cardBackOculto}
+            perguntaOculta={perguntaOculta}
+            acertei={acertei}
+            quaseAcertei={quaseAcertei}
+            errei={errei}
+            arrayDeClicados={arrayDeClicados}
+            />)
+            }
+        </PerguntasCards>
+
+    )
+}
+
+function PerguntasIndividuais({question, answer, numero, revelarCard, cardFrontOculto, revelaResposta, 
+    cardBackOculto, perguntaOculta, acertei, quaseAcertei, errei, arrayDeClicados}) {
+    return (
+       <>
+            <Pergunta perguntaOculta={perguntaOculta} arrayDeClicados={arrayDeClicados}>
+                <p>Pergunta {numero}</p>
+                <button onClick={()=>revelarCard(numero)}><img src={play} alt="Botão de ver pergunta" /></button>
+            </Pergunta>
+            <Card>
+                <CardFront  cardFrontOculto={cardFrontOculto}>
+                    <p>{question}</p>
+                    <button onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
+
+                </CardFront>
+                <CardBack cardBackOculto={cardBackOculto}>
+                    <p>{answer}</p>
+                    <Botoes>
+                        <Errou onClick={errei}>Não lembrei</Errou>
+                        <Quase onClick={quaseAcertei}>Quase não lembrei</Quase>
+                        <Certo onClick={acertei}>Zap!</Certo>
+                    </Botoes>
+                </CardBack>
+            </Card>
         </>
     )
 }
+
+const PerguntasCards = styled.div`
+    margin-top: 153px;
+    margin-bottom: 100px;
+    button{
+        border:none;
+        background-color: tra;
+    }
+`
+const Pergunta = styled.div`
+    width: 300px;
+    height: 65px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    display: ${({perguntaOculta, arrayDeClicados}) => perguntaOculta && arrayDeClicados.includes && "none"};
+    img {
+        width: 20px;
+        height: 23px;
+    }
+    button{
+        background-color: transparent;
+    }
+`
+
+const Card = styled.div`
+    p {
+    padding-top: 18px;
+    padding-left: 15px;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    color: #333333;
+    }
+    
+`
+
+const CardFront = styled.div` 
+    width: 299px;
+    height: 131px;
+    background: #FFFFD5;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    position: relative;
+    margin-bottom: 25px;
+    display: ${({cardFrontOculto}) => cardFrontOculto && "none"}; //Verifica quando o botão é clicado é virar
+
+    img {
+        width: 30px;
+        height: 20px;
+        position: absolute;
+        right: 15px;
+        bottom: 6px;
+    }
+`
+
+const CardBack = styled.div`
+    width: 300px;
+    min-height: 131px;
+    background: #FFFFD5;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    margin-bottom: 25px;
+    display: ${({cardBackOculto}) => cardBackOculto && "none"};
+    button{
+    width: 85.17px;
+    height: 37.17px;
+    border-radius: 5px;
+}
+`
+
+const Botoes = styled.div` 
+    display: flex;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin:12px
+`
+
+const Errou = styled.button`
+    background: #FF3030;
+    color: #FFFFFF;
+`
+const Quase = styled.button`
+    background: #FF922E;
+    color: #FFFFFF;
+`
+
+const Certo = styled.button`
+    background: #2FBE34;
+    color: #FFFFFF
+`
