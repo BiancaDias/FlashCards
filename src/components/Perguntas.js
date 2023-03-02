@@ -3,7 +3,7 @@ import play from "../assets/seta_play.png"
 import styled from "styled-components";
 import { useState } from "react";
 
-export default function Perguntas({setErrado, setQuase, setZap, errado ,quase, zap, respondidosTotais, setRespondidosTotais}) {
+export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, zap, respondidosTotais, setRespondidosTotais }) {
     const cards = [
         { question: "O que é JSX?", answer: "Uma extensão da linguagem JavaScript" },
         { question: "O React é __", answer: "Uma biblioteca JavaScript para construção de interfaces" },
@@ -23,63 +23,96 @@ export default function Perguntas({setErrado, setQuase, setZap, errado ,quase, z
 
     const [cardAtual, setCardAtual] = useState(100);
 
-    function revelarCard(cardClicado){
+    function revelarCard(cardClicado) {
         setCardFrontOculto(false);
         setCardBackOculto(true);
         setPerguntaOculta(true);
         setCardAtual(cardClicado)
     }
 
-    function revelaResposta(){
+    function revelaResposta() {
         setCardFrontOculto(true);
         setCardBackOculto(false);
     }
-    function terminaCard(cardAtual){
+    function terminaCard(cardAtual) {
         setPerguntaOculta(false);
         setCardBackOculto(true);
-        setRespondidosTotais(respondidosTotais+1);
+        setRespondidosTotais(respondidosTotais + 1);
         setRespondidos([...respondidos, cardAtual]); //aqui vai ser usado para desabilitar o onclick
     }
 
-    function sabia(cardAtual, situacao){
-        if(situacao==="errei") setErrado([...errado, cardAtual]);
-        if(situacao==="quase") setQuase([...quase, cardAtual]);
-        if(situacao==="acertei") setZap([...zap, cardAtual]);
+    function sabia(cardAtual, situacao) {
+        if (situacao === "errei") setErrado([...errado, cardAtual]);
+        if (situacao === "quase") setQuase([...quase, cardAtual]);
+        if (situacao === "acertei") setZap([...zap, cardAtual]);
         terminaCard(cardAtual);
     }
+
+    const layout = [];
+    cards.forEach((card, i) => {
+        //caso tenha sido clicado
+        if(respondidos.includes(i+1)){
+            layout.push(<Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
+            <p data-test="flashcard-text">Pergunta {i + 1}</p>
+            <button disabled={respondidos.includes(i + 1) ? true : false} data-test="play-btn" onClick={() => revelarCard(i + 1)}><img src={play} alt="Botão de ver pergunta" /></button>
+        </Pergunta>)
+        }
+        //caso em que não foi clicado ainda
+        if (!respondidos.includes(i+1) && cardAtual!==i+1) {
+            layout.push(<Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
+                <p data-test="flashcard-text">Pergunta {i + 1}</p>
+                <button disabled={respondidos.includes(i + 1) ? true : false} data-test="play-btn" onClick={() => revelarCard(i + 1)}><img src={play} alt="Botão de ver pergunta" /></button>
+            </Pergunta>)
+        }
+
+        
+        //se foi clicado
+        if (cardAtual===i+1 && cardFrontOculto === false) {
+            layout.push(
+                <Card>
+                    <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={i+1}>
+                        <p data-test="flashcard-text">{card.question}</p>
+                        <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
+                    </CardFront>
+                </Card>)
+        }
+
+        //se cliquei em revelar resposta
+        if (cardAtual===i+1 && cardBackOculto === false){
+            layout.push(
+                <Card>
+                    <CardBack cardBackOculto={cardBackOculto} cardAtual={cardAtual} numero={i+1}>
+                    <p data-test="flashcard-text">{card.answer}</p>
+                    <Botoes>
+                        <Errou data-test="no-btn" onClick={() => sabia(i+1, "errei")}>Não lembrei</Errou>
+                        <Quase data-test="partial-btn" onClick={() => sabia(i+1, "quase")}>Quase não lembrei</Quase>
+                        <Certo data-test="zap-btn" onClick={() => sabia(i+1, "acertei")}>Zap!</Certo>
+                    </Botoes>
+                </CardBack>
+                </Card>
+            )
+        }
+    })
+
     return (
 
         <PerguntasCards>
-            {cards.map((card, i) => <PerguntasIndividuais 
-            key={i+1} 
-            question={card.question} 
-            answer = {card.answer} 
-            numero={i+1} 
-            revelarCard={revelarCard} 
-            cardFrontOculto={cardFrontOculto}
-            revelaResposta={revelaResposta}
-            cardBackOculto={cardBackOculto}
-            perguntaOculta={perguntaOculta}
-            sabia={sabia}
-            cardAtual={cardAtual}
-            respondidos={respondidos}
-            />)
-            }
+            {layout}
         </PerguntasCards>
 
     )
 }
 
-function PerguntasIndividuais({question, answer, numero, revelarCard, cardFrontOculto, revelaResposta, 
-    cardBackOculto, perguntaOculta, sabia, cardAtual, respondidos}) {
+function PerguntasIndividuais({ question, answer, numero, revelarCard, cardFrontOculto, revelaResposta,
+    cardBackOculto, perguntaOculta, sabia, cardAtual, respondidos }) {
     return (
-       <>
+        <>
             <Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={numero}>
                 <p data-test="flashcard-text">Pergunta {numero}</p>
-                <button disabled={respondidos.includes(numero) ? true : false} data-test="play-btn" onClick={()=>revelarCard(numero)}><img src={play} alt="Botão de ver pergunta" /></button>
+                <button disabled={respondidos.includes(numero) ? true : false} data-test="play-btn" onClick={() => revelarCard(numero)}><img src={play} alt="Botão de ver pergunta" /></button>
             </Pergunta>
             <Card>
-                <CardFront  cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={numero}>
+                <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={numero}>
                     <p data-test="flashcard-text">{question}</p>
                     <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
 
@@ -87,9 +120,9 @@ function PerguntasIndividuais({question, answer, numero, revelarCard, cardFrontO
                 <CardBack cardBackOculto={cardBackOculto} cardAtual={cardAtual} numero={numero}>
                     <p data-test="flashcard-text">{answer}</p>
                     <Botoes>
-                        <Errou data-test="no-btn"  onClick={()=>sabia(numero, "errei")}>Não lembrei</Errou>
-                        <Quase data-test="partial-btn"  onClick={()=>sabia(numero, "quase")}>Quase não lembrei</Quase>
-                        <Certo data-test="zap-btn"  onClick={()=>sabia(numero, "acertei")}>Zap!</Certo>
+                        <Errou data-test="no-btn" onClick={() => sabia(numero, "errei")}>Não lembrei</Errou>
+                        <Quase data-test="partial-btn" onClick={() => sabia(numero, "quase")}>Quase não lembrei</Quase>
+                        <Certo data-test="zap-btn" onClick={() => sabia(numero, "acertei")}>Zap!</Certo>
                     </Botoes>
                 </CardBack>
             </Card>
@@ -116,7 +149,7 @@ const Pergunta = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 25px;
-    display: ${({perguntaOculta, cardAtual, numero}) => (perguntaOculta && cardAtual === numero) && "none"};
+    display: ${({ perguntaOculta, cardAtual, numero }) => (perguntaOculta && cardAtual === numero) && "none"};
     img {
         width: 20px;
         height: 23px;
@@ -146,7 +179,7 @@ const CardFront = styled.div`
     border-radius: 5px;
     position: relative;
     margin-bottom: 25px;
-    display: ${({cardFrontOculto, cardAtual, numero}) => (cardAtual ===numero && cardFrontOculto===false) ? "" : "none"}; //Verifica quando o botão é clicado é virar
+    display: ${({ cardFrontOculto, cardAtual, numero }) => (cardAtual === numero && cardFrontOculto === false) ? "" : "none"}; //Verifica quando o botão é clicado é virar
 
     img {
         width: 30px;
@@ -164,7 +197,7 @@ const CardBack = styled.div`
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     margin-bottom: 25px;
-    display: ${({cardBackOculto, cardAtual, numero}) => (cardAtual ===numero && cardBackOculto===false) ? "" : "none"};
+    display: ${({ cardBackOculto, cardAtual, numero }) => (cardAtual === numero && cardBackOculto === false) ? "" : "none"};
     button{
     width: 85.17px;
     height: 37.17px;
