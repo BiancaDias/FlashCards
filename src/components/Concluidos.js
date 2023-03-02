@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-export default function Concluidos(){
+export default function Concluidos({respondidosTotais}){
     return(
         <Rodape data-test="footer">
-            <p>0/4 CONCLUÍDOS</p>
+            <p>{respondidosTotais}/8 CONCLUÍDOS</p>
         </Rodape>
     )
 }
