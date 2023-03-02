@@ -69,7 +69,7 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
         //se foi clicado
         if (cardAtual===i+1 && cardFrontOculto === false) {
             layout.push(
-                <Card>
+                <Card data-test="flashcard">
                     <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={i+1}>
                         <p data-test="flashcard-text">{card.question}</p>
                         <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
@@ -80,7 +80,7 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
         //se cliquei em revelar resposta
         if (cardAtual===i+1 && cardBackOculto === false){
             layout.push(
-                <Card>
+                <Card data-test="flashcard">
                     <CardBack cardBackOculto={cardBackOculto} cardAtual={cardAtual} numero={i+1}>
                     <p data-test="flashcard-text">{card.answer}</p>
                     <Botoes>
