@@ -1,5 +1,8 @@
 import girar from "../assets/seta_virar.png"
 import play from "../assets/seta_play.png"
+import iconeErrado from "../assets/icone_erro.png"
+import iconeQuase from "../assets/icone_quase.png"
+import iconeZap from "../assets/icone_certo.png"
 import styled from "styled-components";
 import { useState } from "react";
 
@@ -51,26 +54,40 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
     const layout = [];
     cards.forEach((card, i) => {
         //caso tenha sido clicado
-        if(respondidos.includes(i+1)){
-            layout.push(<Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
-            <p data-test="flashcard-text">Pergunta {i + 1}</p>
-            <button disabled={respondidos.includes(i + 1) ? true : false} data-test="play-btn" onClick={() => revelarCard(i + 1)}><img src={play} alt="Botão de ver pergunta" /></button>
-        </Pergunta>)
+        if (respondidos.includes(i + 1)) {
+            if (errado.includes(i + 1)) {
+                layout.push(<PerguntaRespondidaErrada data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
+                    <p data-test="flashcard-text">Pergunta {i + 1}</p>
+                    <img data-test="no-icon" src={iconeErrado} alt="indicacao de errado" />
+                </PerguntaRespondidaErrada>)
+            }
+            if (quase.includes(i + 1)) {
+                layout.push(<PerguntaRespondidaQuase data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
+                    <p data-test="flashcard-text">Pergunta {i + 1}</p>
+                    <img data-test="partial-icon" src={iconeQuase} alt="Botão de ver pergunta" />
+                </PerguntaRespondidaQuase>)
+            }
+            if (zap.includes(i + 1)) {
+                layout.push(<PerguntaRespondidaCerta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
+                    <p data-test="flashcard-text">Pergunta {i + 1}</p>
+                    <img data-test="zap-icon" src={iconeZap} alt="Botão de ver pergunta" />
+                </PerguntaRespondidaCerta>)
+            }
         }
         //caso em que não foi clicado ainda
-        if (!respondidos.includes(i+1) && cardAtual!==i+1) {
+        if (!respondidos.includes(i + 1) && cardAtual !== i + 1) {
             layout.push(<Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={i + 1}>
                 <p data-test="flashcard-text">Pergunta {i + 1}</p>
-                <button disabled={respondidos.includes(i + 1) ? true : false} data-test="play-btn" onClick={() => revelarCard(i + 1)}><img src={play} alt="Botão de ver pergunta" /></button>
+                <button data-test="play-btn" onClick={() => revelarCard(i + 1)}><img src={play} alt="Botão de ver pergunta" /></button>
             </Pergunta>)
         }
 
-        
+
         //se foi clicado
-        if (cardAtual===i+1 && cardFrontOculto === false) {
+        if (cardAtual === i + 1 && cardFrontOculto === false) {
             layout.push(
                 <Card data-test="flashcard">
-                    <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={i+1}>
+                    <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={i + 1}>
                         <p data-test="flashcard-text">{card.question}</p>
                         <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
                     </CardFront>
@@ -78,17 +95,17 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
         }
 
         //se cliquei em revelar resposta
-        if (cardAtual===i+1 && cardBackOculto === false){
+        if (cardAtual === i + 1 && cardBackOculto === false) {
             layout.push(
                 <Card data-test="flashcard">
-                    <CardBack cardBackOculto={cardBackOculto} cardAtual={cardAtual} numero={i+1}>
-                    <p data-test="flashcard-text">{card.answer}</p>
-                    <Botoes>
-                        <Errou data-test="no-btn" onClick={() => sabia(i+1, "errei")}>Não lembrei</Errou>
-                        <Quase data-test="partial-btn" onClick={() => sabia(i+1, "quase")}>Quase não lembrei</Quase>
-                        <Certo data-test="zap-btn" onClick={() => sabia(i+1, "acertei")}>Zap!</Certo>
-                    </Botoes>
-                </CardBack>
+                    <CardBack cardBackOculto={cardBackOculto} cardAtual={cardAtual} numero={i + 1}>
+                        <p data-test="flashcard-text">{card.answer}</p>
+                        <Botoes>
+                            <Errou data-test="no-btn" onClick={() => sabia(i + 1, "errei")}>Não lembrei</Errou>
+                            <Quase data-test="partial-btn" onClick={() => sabia(i + 1, "quase")}>Quase não lembrei</Quase>
+                            <Certo data-test="zap-btn" onClick={() => sabia(i + 1, "acertei")}>Zap!</Certo>
+                        </Botoes>
+                    </CardBack>
                 </Card>
             )
         }
@@ -103,32 +120,6 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
     )
 }
 
-function PerguntasIndividuais({ question, answer, numero, revelarCard, cardFrontOculto, revelaResposta,
-    cardBackOculto, perguntaOculta, sabia, cardAtual, respondidos }) {
-    return (
-        <>
-            <Pergunta data-test="flashcard" perguntaOculta={perguntaOculta} cardAtual={cardAtual} numero={numero}>
-                <p data-test="flashcard-text">Pergunta {numero}</p>
-                <button disabled={respondidos.includes(numero) ? true : false} data-test="play-btn" onClick={() => revelarCard(numero)}><img src={play} alt="Botão de ver pergunta" /></button>
-            </Pergunta>
-            <Card>
-                <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={numero}>
-                    <p data-test="flashcard-text">{question}</p>
-                    <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
-
-                </CardFront>
-                <CardBack cardBackOculto={cardBackOculto} cardAtual={cardAtual} numero={numero}>
-                    <p data-test="flashcard-text">{answer}</p>
-                    <Botoes>
-                        <Errou data-test="no-btn" onClick={() => sabia(numero, "errei")}>Não lembrei</Errou>
-                        <Quase data-test="partial-btn" onClick={() => sabia(numero, "quase")}>Quase não lembrei</Quase>
-                        <Certo data-test="zap-btn" onClick={() => sabia(numero, "acertei")}>Zap!</Certo>
-                    </Botoes>
-                </CardBack>
-            </Card>
-        </>
-    )
-}
 
 const PerguntasCards = styled.div`
     margin-top: 153px;
@@ -156,6 +147,31 @@ const Pergunta = styled.div`
     }
     button{
         background-color: transparent;
+    }
+`
+
+const PerguntaRespondidaErrada = styled(Pergunta)`
+    text-decoration-line: line-through;
+    color: #FF3030;
+    img{
+        width: 23px;
+        height: 23px;
+    }
+`
+const PerguntaRespondidaQuase= styled(Pergunta)`
+    text-decoration-line: line-through;
+    color: #FF922E;
+    img{
+        width: 23px;
+        height: 23px;
+    }
+`
+const PerguntaRespondidaCerta= styled(Pergunta)`
+    text-decoration-line: line-through;
+    color: #2FBE34;
+    img{
+        width: 23px;
+        height: 23px;
     }
 `
 
