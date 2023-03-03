@@ -3,13 +3,26 @@ import styled from "styled-components";
 
 export default function Topo() {
     return (
+      <ContainerTopo>
         <ParteDeCima>
             <img src={logo} alt="logo raio" />
             <h1>ZapRecall</h1>
         </ParteDeCima>
+      </ContainerTopo>
     )
 }
-
+const ContainerTopo = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: black;
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  background-color: #FB6B6B;
+`
 const ParteDeCima = styled.div`
  display: flex;
   justify-content: center;
@@ -18,13 +31,8 @@ const ParteDeCima = styled.div`
   align-items: center;
   justify-content: space-around;
   margin-top: 50px;
-  margin-bottom: 60px;
-  position: fixed;
-  top: 0%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  background-color: #FB6B6B;
+  margin-bottom: 35px;
+  
   img {
   width: 52px;
   height: 60px;

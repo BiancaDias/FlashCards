@@ -140,6 +140,9 @@ const Pergunta = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
     display: ${({ perguntaOculta, cardAtual, numero }) => (perguntaOculta && cardAtual === numero) && "none"};
     img {
         width: 20px;
@@ -177,8 +180,6 @@ const PerguntaRespondidaCerta= styled(Pergunta)`
 
 const Card = styled.div`
     p {
-    padding-top: 18px;
-    padding-left: 15px;
     font-weight: 400;
     font-size: 18px;
     line-height: 22px;
@@ -188,6 +189,7 @@ const Card = styled.div`
 `
 
 const CardFront = styled.div` 
+    padding: 15px;
     width: 299px;
     height: 131px;
     background: #FFFFD5;
@@ -207,6 +209,7 @@ const CardFront = styled.div`
 `
 
 const CardBack = styled.div`
+    padding: 15px;
     width: 300px;
     min-height: 131px;
     background: #FFFFD5;
@@ -230,7 +233,7 @@ const Botoes = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
-    margin:12px
+    margin-top: 10px;
 `
 
 const Errou = styled.button`
