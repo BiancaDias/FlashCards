@@ -9,12 +9,24 @@ export default function FlashCards({iniciar}) {
   const [quase, setQuase] = useState([]);
   const [zap, setZap] = useState([]);
   const [respondidosTotais, setRespondidosTotais] = useState(0)
+  const [arrayDeIconesRespondidos, setArrayDeIconesRespondidos] = useState([]);
 
   return (
     <AreaFlashCards iniciar={iniciar}>
       <Topo/>
-      <Perguntas setErrado={setErrado} setQuase={setQuase} setZap={setZap} errado={errado} quase={quase} zap={zap} respondidosTotais ={respondidosTotais} setRespondidosTotais = {setRespondidosTotais}/>
-      <Concluidos respondidosTotais ={respondidosTotais}/>
+      <Perguntas 
+        setErrado={setErrado} 
+        setQuase={setQuase} 
+        setZap={setZap} 
+        errado={errado} 
+        quase={quase} 
+        zap={zap} 
+        respondidosTotais ={respondidosTotais} 
+        setRespondidosTotais = {setRespondidosTotais}
+        arrayDeIconesRespondidos={arrayDeIconesRespondidos}
+        setArrayDeIconesRespondidos={setArrayDeIconesRespondidos}
+      />
+      <Concluidos respondidosTotais ={respondidosTotais} arrayDeIconesRespondidos={arrayDeIconesRespondidos}/>
     </AreaFlashCards>
   );
 }

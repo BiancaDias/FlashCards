@@ -6,7 +6,7 @@ import iconeZap from "../assets/icone_certo.png"
 import styled from "styled-components";
 import { useState } from "react";
 
-export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, zap, respondidosTotais, setRespondidosTotais }) {
+export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, zap, respondidosTotais, setRespondidosTotais, arrayDeIconesRespondidos, setArrayDeIconesRespondidos}) {
     const cards = [
         { question: "O que é JSX?", answer: "Uma extensão da linguagem JavaScript" },
         { question: "O React é __", answer: "Uma biblioteca JavaScript para construção de interfaces" },
@@ -45,9 +45,18 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
     }
 
     function sabia(cardAtual, situacao) {
-        if (situacao === "errei") setErrado([...errado, cardAtual]);
-        if (situacao === "quase") setQuase([...quase, cardAtual]);
-        if (situacao === "acertei") setZap([...zap, cardAtual]);
+        if (situacao === "errei") {
+            setErrado([...errado, cardAtual])
+            setArrayDeIconesRespondidos([...arrayDeIconesRespondidos, iconeErrado])
+        }
+        if (situacao === "quase") {
+            setQuase([...quase, cardAtual])
+            setArrayDeIconesRespondidos([...arrayDeIconesRespondidos, iconeQuase])
+        }
+        if (situacao === "acertei") {
+            setZap([...zap, cardAtual])
+            setArrayDeIconesRespondidos([...arrayDeIconesRespondidos, iconeZap])
+        }
         terminaCard(cardAtual);
     }
 
