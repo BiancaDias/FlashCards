@@ -89,7 +89,7 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
                 <Card data-test="flashcard">
                     <CardFront cardFrontOculto={cardFrontOculto} cardAtual={cardAtual} numero={i + 1}>
                         <p data-test="flashcard-text">{card.question}</p>
-                        <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"></img></button>
+                        <button data-test="turn-btn" onClick={revelaResposta}><img src={girar} alt="botão de girar o card"/></button>
                     </CardFront>
                 </Card>)
         }
@@ -126,7 +126,7 @@ const PerguntasCards = styled.div`
     margin-bottom: 100px;
     button{
         border:none;
-        background-color: tra;
+        
     }
 `
 const Pergunta = styled.div`
@@ -198,13 +198,15 @@ const CardFront = styled.div`
     position: relative;
     margin-bottom: 25px;
     display: ${({ cardFrontOculto, cardAtual, numero }) => (cardAtual === numero && cardFrontOculto === false) ? "" : "none"}; //Verifica quando o botão é clicado é virar
-
     img {
         width: 30px;
         height: 20px;
         position: absolute;
         right: 15px;
         bottom: 6px;
+    }
+    button{
+        background-color: transparent;
     }
 `
 
