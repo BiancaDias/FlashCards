@@ -132,7 +132,7 @@ export default function Perguntas({ setErrado, setQuase, setZap, errado, quase, 
 
 const PerguntasCards = styled.div`
     margin-top: 153px;
-    margin-bottom: ${({arrayDeIconesRespondidos})=> arrayDeIconesRespondidos.length === 8 ? "200px" : "100px"};
+    margin-bottom: ${({arrayDeIconesRespondidos})=> arrayDeIconesRespondidos.length === 8 ? "200px" : "120px"};
     button{
         border:none;
         
